@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.27)
-include(FetchContent)
+cmake_minimum_required(VERSION 3.15)
 
 project(
   simdjson-py
@@ -8,6 +7,9 @@ project(
   DESCRIPTION "Python native bindings for simdjson"
   HOMEPAGE_URL "https://github.com/lqhuang/simdjson-py"
 )
+
+# ----------------------------- Setup -----------------------------
+set(CMAKE_CXX_STANDARD 17)
 
 if(NOT SKBUILD)
   message(WARNING "\
@@ -35,6 +37,9 @@ endif()
 if(VENV)
   set(Python_EXECUTABLE "./.venv/bin/python3" CACHE STRING)
 endif()
+
+# ----------------------------- Lib -----------------------------
+include(FetchContent)
 
 # Try to import all Python components potentially needed by nanobind
 find_package(Python 3.9
@@ -68,13 +73,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(simdjson)
 include_directories(${simdjson_SOURCE_DIR}/include)
 
+# ----------------------------- Installation -----------------------------
 nanobind_add_module(
-  nanobind_ext # Target name
+  _simdjson_version
   NB_STATIC STABLE_ABI LTO # Optional flags
-
-  # src files below
-  src/simdjson/nanobind_example.cpp
+  src/lib/_simdjson_version.cpp
 )
-
-# Install directive for scikit-build-core
-install(TARGETS nanobind_ext LIBRARY DESTINATION simdjson)
+install(
+  TARGETS _simdjson_version
+  LIBRARY DESTINATION simdjson
+)

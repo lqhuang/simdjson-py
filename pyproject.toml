@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core >=0.4.3", "nanobind >=1.3.2"]
+requires = ["scikit-build-core", "nanobind"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -17,13 +17,18 @@ Homepage = "https://github.com/lqhuang/simdjson-py"
 
 [tool.scikit-build]
 # Protect the configuration against future changes in scikit-build-core
-minimum-version = "0.4"
+minimum-version = "0.8"
 
-# Setuptools-style build caching in a local directory
-build-dir = "build/{wheel_tag}"
-
-# Build stable ABI wheels for CPython 3.12+
+# The wheel will automatically look for Python packages at
+# src/<package_name>, python/<package_name>, and <package_name>,
+# in that order.
+wheel.packages = ["src/simdjson"]
 wheel.py-api = "cp39"
+wheel.license-files = ["LICENSE"]
+
+# build-dir = "build/{wheel_tag}"
+
+experimental = true
 
 [tool.cibuildwheel]
 # Necessary to see build output from the actual compilation
@@ -32,9 +37,6 @@ build-verbosity = 1
 # Run pytest to ensure that the package was correctly built
 test-command = "pytest {project}/tests"
 test-requires = "pytest"
-
-# Don't test Python 3.9 wheels on macOS/arm64
-test-skip = "cp39-macosx_*:arm64"
 
 # Needed for full C++17 support
 [tool.cibuildwheel.macos.environment]
