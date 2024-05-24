@@ -1,8 +1,9 @@
+# follow upstream
+# https://github.com/simdjson/simdjson/blob/master/.clang-format
 BasedOnStyle: LLVM
+# IndentWidth: 4
+# UseTab: Never
+# MaxEmptyLinesToKeep: 2
 
-IndentWidth: 4
-UseTab: Never
-MaxEmptyLinesToKeep: 2
-
-BracketAlignmentStyle: BlockIndent
-BreakBeforeBraces: Attach
+# BracketAlignmentStyle: BlockIndent
+# BreakBeforeBraces: Attach

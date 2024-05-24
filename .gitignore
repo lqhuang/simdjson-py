@@ -2,8 +2,23 @@
 # 1. https://github.com/github/gitignore/blob/master/Python.gitignore
 # 2. https://github.com/github/gitignore/blob/main/C.gitignore
 
+jsonexamples/
+quickstart/
+
 # IDE
 .vscode/
+
+# CMake
+CMakeCache.txt
+CMakeInit.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+# ninja
+.ninja_deps
+.ninja_log
+build.ninja
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

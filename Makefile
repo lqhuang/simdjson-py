@@ -1,5 +1,3 @@
-
-
 # Python
 VENV_DIR := ./.venv
 PYTHON   := $(VENV_DIR)/bin/python3
@@ -15,8 +13,8 @@ CURR_DIR  := $(shell pwd)
 help:
 	@echo "Usage:"
 	@echo "  make setup"
-	@echo "  make cmake-configure"
-	@echo "  make cmake-compile"
+	@echo "  make configure"
+	@echo "  make compile"
 	@echo "  make skbuild-install"
 	@echo "  make test"
 
@@ -24,18 +22,21 @@ setup:
 	${PIP} install nanobind 'scikit-build-core[pyproject]'
 
 # launch `cmake` to generate the build system
-cmake-configure:
-	${CMAKE} -S . -B ${BUILD_DIR} -DPython_EXECUTABLE=${PYTHON}
+configure:
+	${CMAKE} -S . -B ${BUILD_DIR} -DPython_EXECUTABLE=${PYTHON} -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 
-cmake-clean:
-	rm -Rf ${BUILD_DIR}
+clean:
+	rm -rf ${BUILD_DIR}
 
-cmake-compile:
+compile:
 	${CMAKE} --build ${BUILD_DIR}
 
-# Incremental rebuilds
+# Incremental rebuilds for development
 skbuild-install:
-	${PIP} install --no-build-isolation --config-settings=editable.rebuild=true -Cbuild-dir=build -ve .
+	${PIP} install --no-build-isolation --check-build-dependencies \
+		--config-settings=editable.rebuild=true \
+		-Cbuild-dir=${BUILD_DIR} -Ccmake.define.CMAKE_EXPORT_COMPILE_COMMANDS=1 \
+		-ve .
 
 test:
-	${PYTEST} -v .
+	${PYTEST} -v tests

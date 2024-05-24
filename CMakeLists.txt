@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.26)
 
 project(
   simdjson-py
@@ -10,6 +10,8 @@ project(
 
 # ----------------------------- Setup -----------------------------
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION on)
 
 if(NOT SKBUILD)
   message(WARNING "\
@@ -73,13 +75,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(simdjson)
 include_directories(${simdjson_SOURCE_DIR}/include)
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src/lib)
+
 # ----------------------------- Installation -----------------------------
-nanobind_add_module(
-  _simdjson_version
-  NB_STATIC STABLE_ABI LTO # Optional flags
-  src/lib/_simdjson_version.cpp
-)
-install(
-  TARGETS _simdjson_version
-  LIBRARY DESTINATION simdjson
-)
+include(GNUInstallDirs)
